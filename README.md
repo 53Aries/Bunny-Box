@@ -1,13 +1,10 @@
 # Happy-Hare-Plus4-Configs
 
 ## ISSUES
-* macros not implemented
-* encoder or stepper config incorrect - large discrepancies in readings
+* Macros not fully tested 
 * configs in general are in a very very experimental, constantly shifting state
-* Box crashing when using heater and doing other stuff at around 65 degC (not sure if still present)
 * no LED signalling
 * probably more
-
 
 ## Happy Hare install
 
@@ -29,6 +26,10 @@ If you're modifying the files for development purposes you will need to rerun th
 Make sure Happy Hare files were included during install: `[include mmu/base/*.cfg]` & `[include mmu/optional/client_macros.cfg]`
 
 3. Remove the `[hall_filament_width_sensor]` section
+
+## Slicer settings
+
+Refer to the [Happy Hare documentation](https://github.com/moggieuk/Happy-Hare/wiki/Slicer-Setup).
 
 ## User interface
 
