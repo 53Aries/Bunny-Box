@@ -38,29 +38,9 @@ If you're modifying the files for development purposes you will need to rerun th
 ```bash
 [gcode_macro PRINT_START]
 gcode:
-    AUTOTUNE_SHAPERS
-    TOOL_CHANGE_END
-    DISABLE_ALL_SENSOR
-    CLEAR_PAUSE
-
-    {% set bedtemp = params.BED|int %}
-    {% set hotendtemp = params.HOTEND|int %}
-    {% set chambertemp = params.CHAMBER|default(0)|int %}
-    {% set extruder = params.EXTRUDER|default(0)|int %}
-    SET_GCODE_OFFSET Z=0 # Zero out z-offset 
-    M104 S0
-
-    M106 P2 S0
-    M106 P3 S0
-    M106 S255
-    {% if "xyz" in printer.toolhead.homed_axes %}
-        G0 X50 Y50 F6000
-    {% endif %}
-    G28      
-    M141 S{chambertemp}
-    M140 S{bedtemp}    
-    M106 S0
-    {% if printer.mmu.num_gates >= 4 %} 
+[...]
+-    {% if printer.save_variables.variables.box_count >= 1 %} 
++    {% if printer.mmu.num_gates >= 4 %} 
         SAVE_VARIABLE VARIABLE=load_retry_num VALUE=0 # saved variables probably need a rework
         SAVE_VARIABLE VARIABLE=retry_step VALUE=None
         SAVE_VARIABLE VARIABLE=is_tool_change VALUE=0
@@ -69,38 +49,41 @@ gcode:
             G4 P100
         {% endfor %}
         SAVE_VARIABLE VARIABLE=extrude_state VALUE=-1
-        {% if printer.mmu.enabled == 1 %}
+-        {% if printer.save_variables.variables.enable_box == 1 %}
++        {% if printer.mmu.enabled == 1 %}
             BOX_PRINT_START EXTRUDER={extruder} HOTENDTEMP={hotendtemp}
             M400
             EXTRUSION_AND_FLUSH HOTEND={hotendtemp}
         {% endif %}
-    {% endif %}
-    M106 S0
-    CLEAR_NOZZLE HOTEND={hotendtemp}
-    M190 S{bedtemp}     
-#    M141 S{chambertemp}    
-    M104 S140
-    Z_TILT_ADJUST
-    G29
-    G0 Z50 F600
-    G0 X5 Y5  F6000
-    
-    {% if chambertemp == 0 %}
-        M106 P3 S255
-    {% endif %}
-    M109 S{hotendtemp}
-    M141 S{chambertemp}    
-    M204 S10000
-    SET_PRINT_STATS_INFO CURRENT_LAYER=1
-    ENABLE_ALL_SENSOR
-    save_last_file
+[...]
+```
 
+2. In ENABLE_ALL_SENSOR AND DISABLE_ALL_SENSOR
+```
+[gcode_macro ENABLE_ALL_SENSOR]
+gcode:
+    ENABLE_FILAMENT_WIDTH_SENSOR
+    RESET_FILAMENT_WIDTH_SENSOR
+    query_filament_width
+    SET_FILAMENT_SENSOR SENSOR=fila ENABLE=1
+-    {% if printer["filament_motion_sensor box_motion_sensor"] and printer.save_variables.variables.enable_box == 1 %}
+        CLEAR_MOTION_DATA
+        SET_FILAMENT_SENSOR SENSOR=box_motion_sensor ENABLE=1
+    {% endif %}
+
+[gcode_macro DISABLE_ALL_SENSOR]
+gcode:
+    SET_FILAMENT_SENSOR SENSOR=fila ENABLE=0
+-    {% if printer["filament_motion_sensor box_motion_sensor"] %}
+        SET_FILAMENT_SENSOR SENSOR=box_motion_sensor ENABLE=0
+    {% endif %}
+    DISABLE_FILAMENT_WIDTH_SENSOR
 ```
 
 ## Slicer settings
 
 None! The mod is intended to be transparent for the slicer. If your gcode works with a stock Plus4, it should work with Happy Hare. 
-Tested on Orca Slicer using the following g-codes, which are meant to replicate the Qidi Slicer profile.
+Tested on Orca Slicer using the [following g-codes](https://github.com/Wazzup77/Happy-Hare-Plus4-Configs/blob/main/slicer_machine_gcodes.md), which are meant to replicate the Qidi Slicer profile.
 
 ## Additional help
 
