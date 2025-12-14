@@ -7,7 +7,8 @@ TODO - installer script will be made available in the future.
 
 ### MANUAL INSTALLATION
 
-#### HAPPY HARE INSTALL
+<details>
+<summary> HAPPY HARE INSTALL </summary>
 
 1. Copy the configs (`mmu` folder and `bunnybox_macros.cfg`).
 
@@ -34,10 +35,11 @@ echo "mmu__revision = 0" >> printer_data/config/saved_variables.cfg
 ```bash
 sudo service klipper restart
 ```
+</details>
 
-If you're modifying the files for development purposes you will need to rerun the install script.
 
-#### `[printer.cfg]` CHANGES
+<details>
+<summary> `[printer.cfg]` CHANGES </summary>
 
 1. Remove Qidi's stock box config include `[include box.cfg]`
 
@@ -47,7 +49,10 @@ If you're modifying the files for development purposes you will need to rerun th
 
 4. Make sure Happy Hare files were included during install: `[include mmu/base/*.cfg]`.
 
-#### `[gcode_macro.cfg]` CHANGES
+</details>
+
+<details>
+<summary> `[gcode_macro.cfg]` CHANGES </summary>
 
 1. In PRINT_START we need to change Box detection logic:
 ```diff
@@ -155,8 +160,10 @@ gcode:
         {% endif %}
     {% endif %}
 ```
+</details>
 
-#### BOX TEMPERATURE & HUMIDITY SENSOR
+<details>
+<summary> BOX TEMPERATURE & HUMIDITY SENSOR </summary>
 
 The Qidi Box has a AHT20_F temperature sensor, which unfortunately is not compatible with the stock AHT10 or AHT20 drivers available in Klipper and will crash in some scenarios. Use the [modified file provided here](aht20_f.py). Simply SSH into your printer and do:
 
@@ -172,7 +179,10 @@ If you are on Qidi's Klipper, no further action is necessary.
 
 If you are on stock or other Klipper, you need to add [aht20_f] to your `klipper/klippy/extras/temperature_sensors.cfg`.
 
-#### USER INTERFACE
+</details>
+
+<details>
+<summary> USER INTERFACE </summary>
 
 If you want to have a section in your printer web interface, install baseline fluidd or mainsail, which both have HH implemented. You can do that via kiauh, which comes preinstalled on Qidi printers.
 
@@ -192,7 +202,9 @@ If you want to have a section in your printer web interface, install baseline fl
 You want to REMOVE the existing Fluidd installation and install it again - this will move you from the Qidi version to mainline, which supports Happy Hare.
 Alternatively you can also install Mainsail instead of Fluidd.
 
-### SLICER SETTINGS
+</details>
+
+## SLICER SETTINGS
 
 None! The mod is intended to be transparent for the slicer. If your gcode works with a stock Plus4, it should work with Happy Hare. 
 Tested on Orca Slicer using the [following g-codes](Plus4\slicer_machine_gcodes.md), which are meant to replicate the Qidi Slicer profile.

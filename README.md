@@ -2,21 +2,21 @@
 
 ## FEATURES
 
- * Open source alternative to Qidi's Box control (
+ * Open source alternative to Qidi's Box control
     * No more .so files (you can update Python again)
     * Full control over Qidi Box configuration
- )
- * Compatible with gcode generated for stock Qidi printers (
+
+ * Compatible with gcode generated for stock Qidi printers
     * printer profiles to make Orca Slicer or Prusa Slicer behave like Qidi Slicer also available
     * alternatively, use of a typical Happy Hare printer profile is also supported
- )
- * Fully featured Happy Hare (
+
+ * Fully featured Happy Hare
     * the entire loading process can be tinkered with - increase loading speeds, change toolchange sequences, etc.
     * Spoolman support for better filament management
     * configurable LED effects depending on print / filament state
- )
 
- NOT SUPPORTED:
+
+ **NOT SUPPORTED:**
  * RFID tags - maybe in the future, but honestly who cares?
 
 ## DEVELOPMENT STATUS
