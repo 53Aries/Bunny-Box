@@ -1,7 +1,7 @@
 # Filament Dryer Manager for Happy Hare MMU
 # Provides non-blocking timed drying cycles for filament
 #
-# Copyright (C) 2025
+# Copyright (C) 2025 53Aries 
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
 
@@ -87,6 +87,7 @@ class FilamentDryer:
             self.gcode.respond_info("Filament drying cycle complete!")
             self._stop_drying()
             return self.reactor.NEVER
+        
         # Send status update every 5 minutes to reset idle timeout and inform user
         if int(eventtime - self.start_time) % 300 == 0:  # Every 5 minutes
             remaining_hours = remaining / 3600.0
@@ -99,8 +100,8 @@ class FilamentDryer:
             msg = ("Drying: %.1f°C | %.1f%% complete | "
                    "%.1fh elapsed | %.1fh remaining" 
                    % (current_temp, progress, elapsed_hours, remaining_hours))
-            self.gcode.run_script_from_command("M118 " + msg)                        
-
+            self.gcode.run_script_from_command("M118 " + msg)
+        
         # Continue timer
         return eventtime + 1.0
     
@@ -113,12 +114,6 @@ class FilamentDryer:
         
         # Store original target temperature
         self.original_target = heater.get_status(self.reactor.monotonic())['target']
-                # Prevent idle_timeout from interfering with drying
-        # Set a very long timeout or disable it during drying
-        idle_timeout = self.printer.lookup_object('idle_timeout', None)
-        if idle_timeout is not None:
-            # Request that the printer stays active during drying
-            idle_timeout.set_state("Printing")
         
         # Set new target temperature
         heater.set_temp(temp)
@@ -257,5 +252,3 @@ class FilamentDryer:
 
 def load_config(config):
     return FilamentDryer(config)
-
-
